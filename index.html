@@ -22,9 +22,17 @@
                         mitsu: {
                             yellow: '#FCD34D', // メインのイエロー（ハチミツ）
                             light: '#FEF3C7',  // 背景用薄いイエロー
-                            blue: '#38BDF8',   // 空色（ポスター背景）
+                            blue: '#38BDF8',   // 空色
                             dark: '#57423F',   // 文字色（こげ茶）
                             orange: '#FB923C', // ポイントなどのアクセント
+                        },
+                        yuminemu: {
+                            blue: '#1E3A8A',
+                            light: '#DBEAFE'
+                        },
+                        yumiuma: {
+                            orange: '#EA580C',
+                            light: '#FFEDD5'
                         }
                     }
                 }
@@ -71,7 +79,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 疑似QR・バーコード */
+        /* 疑似QRコード・バーコードのスタイル */
         .mock-qr {
             background: 
                 linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), 
@@ -100,13 +108,10 @@
             background-repeat: no-repeat;
             background-position: center;
         }
-
         .barcode {
             width: 80%;
             height: 50px;
-            background: repeating-linear-gradient(
-                to right, #000, #000 3px, #fff 3px, #fff 5px, #000 5px, #000 9px, #fff 9px, #fff 11px, #000 11px, #000 12px, #fff 12px, #fff 15px
-            );
+            background: repeating-linear-gradient(to right, #000, #000 3px, #fff 3px, #fff 5px, #000 5px, #000 9px, #fff 9px, #fff 11px, #000 11px, #000 12px, #fff 12px, #fff 15px);
         }
 
         /* モーダルアニメーション */
@@ -115,9 +120,8 @@
             to { transform: translateY(0); }
         }
         .modal-content {
-            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        
         .floating-bee {
             animation: float 2s ease-in-out infinite;
         }
@@ -127,38 +131,28 @@
             100% { transform: translateY(0px) rotate(0deg); }
         }
         
-        /* ボトムナビ等のセーフエリア対応 */
         .pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
-        
-        /* スクロールバー非表示（Webkit） */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
     
-    <!-- アプリのメインコンテナ -->
     <div class="app-container w-full h-screen sm:h-[844px] sm:rounded-[40px] sm:border-[12px] sm:border-gray-800 relative">
         
         <!-- ヘッダーエリア -->
         <header class="bg-mitsu-blue text-white px-5 py-4 pt-8 flex justify-between items-center rounded-b-[2rem] z-10 shadow-sm relative overflow-hidden shrink-0">
             <div class="absolute top-0 right-0 w-24 h-12 bg-white/20 rounded-full blur-xl -translate-y-4 translate-x-4"></div>
-            
             <div class="flex items-center gap-2 relative z-10">
                 <span class="text-3xl floating-bee drop-shadow-md">🐝</span>
-                <h1 class="text-2xl font-black tracking-wider text-white drop-shadow-[2px_2px_0px_#FB923C]">
-                    みつペイ
-                </h1>
+                <h1 class="text-2xl font-black tracking-wider text-white drop-shadow-[2px_2px_0px_#FB923C]">みつペイ</h1>
             </div>
-            <!-- 通知ボタン -->
-            <button id="notification-btn" class="relative z-10 bg-white/20 p-2 rounded-full hover:bg-white/30 transition cursor-pointer">
+            <button class="relative z-10 bg-white/20 p-2 rounded-full hover:bg-white/30 transition">
                 <i data-lucide="bell" class="w-5 h-5"></i>
-                <span id="notification-badge" class="absolute top-2 right-2 w-2.5 h-2.5 bg-mitsu-orange rounded-full border-2 border-mitsu-blue animate-pulse"></span>
+                <span class="absolute top-2 right-2 w-2 h-2 bg-mitsu-orange rounded-full border border-mitsu-blue"></span>
             </button>
         </header>
 
         <!-- ==========================================
-             【1】ホームタブ (決済メイン画面)
+             【1】ホームタブ
         =========================================== -->
         <main id="tab-home" class="tab-content active bg-mitsu-light">
             <div class="p-5">
@@ -169,13 +163,10 @@
                 <!-- 残高カード -->
                 <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-mitsu-yellow mb-6 relative overflow-hidden">
                     <div class="absolute -top-6 -right-6 w-24 h-24 bg-mitsu-yellow rounded-full opacity-20 pointer-events-none"></div>
-                    <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-mitsu-orange rounded-full opacity-10 pointer-events-none"></div>
-                    
                     <div class="relative z-10">
                         <div class="flex justify-between items-center mb-1">
                             <span class="text-sm font-bold text-gray-500">Mitsu Pay 残高</span>
-                            <!-- チャージボタン -->
-                            <button id="charge-btn" class="text-xs bg-mitsu-light px-3 py-1.5 rounded-full text-mitsu-dark font-bold flex items-center gap-1 hover:bg-mitsu-yellow/50 transition cursor-pointer shadow-sm active:scale-95">
+                            <button class="text-xs bg-mitsu-light px-3 py-1.5 rounded-full text-mitsu-dark font-bold flex items-center gap-1 hover:bg-mitsu-yellow/50 transition shadow-sm">
                                 <i data-lucide="plus" class="w-3 h-3"></i> チャージ
                             </button>
                         </div>
@@ -202,7 +193,7 @@
                 <div class="bg-white rounded-3xl p-6 shadow-md flex flex-col items-center relative">
                     <p class="font-bold text-mitsu-dark mb-4 bg-mitsu-light px-4 py-1 rounded-full text-sm">レジでシュッ！とかざすだけ</p>
                     <div class="barcode mb-4"></div>
-                    <div class="mock-qr mb-3 pointer-events-none"></div>
+                    <div class="mock-qr mb-3"></div>
                     <p class="text-xs text-gray-400 mb-6 font-mono tracking-widest font-bold">1234 5678 9012 3456</p>
                     
                     <button id="pay-btn" class="w-full bg-gradient-to-r from-mitsu-yellow to-mitsu-orange text-white font-black text-lg py-4 rounded-full shadow-[0_4px_15px_rgba(251,146,60,0.4)] transform transition hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 cursor-pointer relative z-10">
@@ -214,55 +205,100 @@
         </main>
 
         <!-- ==========================================
-             【2】ポイントタブ
+             【2】ポイントタブ (大幅改修)
         =========================================== -->
         <main id="tab-points" class="tab-content bg-mitsu-light p-5">
-            <h2 class="text-xl font-black text-mitsu-dark mb-4 flex items-center gap-2">
-                <div class="w-8 h-8 honeycomb bg-mitsu-orange flex items-center justify-center text-white font-bold text-xs">Pt</div>
-                ハチミツポイント
+            <!-- キャンペーンバナー（相互交換） -->
+            <div class="bg-gradient-to-r from-yuminemu-blue via-purple-500 to-yumiuma-orange p-1 rounded-2xl mb-5 shadow-sm">
+                <div class="bg-white rounded-xl p-3 flex flex-col items-center justify-center relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9IiM1NzQyM0YiLz48L3N2Zz4=')]"></div>
+                    <p class="text-[10px] font-bold bg-mitsu-yellow px-2 py-0.5 rounded-full mb-1 relative z-10">祝！相互交換開始！</p>
+                    <div class="text-sm font-black text-mitsu-dark relative z-10 text-center leading-tight">
+                        <span class="text-yuminemu-blue">ゆみねむ</span> ↔ <span class="text-yumiuma-orange">ゆみうま</span><br>ポイントが繋がりました！
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-lg font-black text-mitsu-dark mb-3 flex items-center gap-2">
+                <div class="w-6 h-6 honeycomb bg-mitsu-orange flex items-center justify-center text-white font-bold text-[10px]">Pt</div>
+                みつペイ ハチミツポイント
             </h2>
 
-            <div class="bg-white rounded-3xl p-6 shadow-md border-b-4 border-mitsu-orange mb-6 text-center relative overflow-hidden">
-                <div class="absolute -top-10 -right-10 text-8xl opacity-5 transform rotate-12">🍯</div>
-                <h3 class="text-sm font-bold text-gray-500 mb-2 relative z-10">利用可能ポイント</h3>
-                <div class="text-[3rem] font-black text-mitsu-orange flex justify-center items-baseline gap-1 relative z-10">
-                    <span id="points-tab-display">1,000</span> <span class="text-2xl">pt</span>
+            <!-- ハチミツポイント残高 -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border-b-4 border-mitsu-orange mb-6 flex justify-between items-center relative overflow-hidden">
+                <div class="absolute -right-4 -bottom-4 text-6xl opacity-5 transform rotate-12">🍯</div>
+                <div>
+                    <h3 class="text-xs font-bold text-gray-500 mb-1 relative z-10">利用可能ポイント</h3>
+                    <p class="text-xs font-bold text-mitsu-dark bg-mitsu-light inline-block px-2 py-0.5 rounded-full relative z-10 mb-1">1pt = 1円分</p>
                 </div>
-                <p class="text-xs font-bold text-mitsu-dark mt-2 bg-mitsu-light inline-block px-3 py-1 rounded-full relative z-10">
-                    1pt = 1円分として使えます！
-                </p>
+                <div class="text-[2rem] font-black text-mitsu-orange flex items-baseline gap-1 relative z-10">
+                    <span id="points-tab-display">1,000</span> <span class="text-base">pt</span>
+                </div>
             </div>
             
-            <h3 class="font-black text-mitsu-dark mb-3 text-sm">ポイントを貯める・お得な情報</h3>
+            <h2 class="text-lg font-black text-mitsu-dark mb-3">提携ポイントを交換する</h2>
             
-            <div class="space-y-4">
-                <!-- キャンペーンアイテム1 -->
-                <div class="campaign-item bg-white rounded-2xl p-4 shadow-sm border-l-8 border-mitsu-yellow flex items-center gap-4 relative overflow-hidden cursor-pointer hover:bg-gray-50 transition active:scale-[0.98]" 
-                     data-title="お買い物でざくざく貯まる！" 
-                     data-desc="対象店舗（スーパーバナツリ、Cafe、セブン等）でMitsu Payを使って決済すると、ご利用金額の最大3%がハチミツポイントとして翌日還元されます！毎日のお買い物がもっと楽しく、お得に。">
-                    <div class="absolute right-0 top-0 text-5xl opacity-10 translate-x-4 -translate-y-2 pointer-events-none">🐝</div>
-                    <div class="w-16 h-16 honeycomb bg-gradient-to-br from-mitsu-yellow to-mitsu-orange flex flex-col items-center justify-center text-white shrink-0 shadow-sm pointer-events-none">
-                        <span class="text-[10px] font-bold mt-1">最大</span>
-                        <span class="text-2xl font-black leading-none -mt-1">3<span class="text-sm">%</span></span>
+            <div class="space-y-4 pb-6">
+                <!-- ゆみねむポイント カード -->
+                <div class="bg-gradient-to-br from-yuminemu-blue to-blue-800 rounded-2xl p-4 shadow-md text-white relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 opacity-20">
+                        <i data-lucide="moon-star" class="w-24 h-24 text-yellow-300"></i>
                     </div>
-                    <div class="z-10 pointer-events-none">
-                        <h4 class="font-bold text-mitsu-dark text-sm">お買い物でざくざく貯まる！</h4>
-                        <p class="text-[11px] text-gray-500 mt-1 leading-tight">対象店舗でMitsu Payを使うとハチミツポイントが最大3%還元！</p>
+                    <div class="relative z-10 flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                                <i data-lucide="moon" class="w-6 h-6 text-yellow-300 fill-yellow-300"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-sm">ゆみねむポイント</h3>
+                                <p class="text-[10px] text-yuminemu-light opacity-90">あなたの「ねむり」を応援！</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-black leading-none" id="yuminemu-display">1,500 <span class="text-sm">pt</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative z-10 bg-white/10 rounded-xl p-3 flex justify-between items-center backdrop-blur-sm border border-white/20">
+                        <div>
+                            <p class="text-xs font-bold text-yellow-300">5pt <i data-lucide="arrow-right" class="w-3 h-3 inline"></i> 1円分</p>
+                            <p class="text-[10px] text-white/80">みつペイ残高にチャージ</p>
+                        </div>
+                        <button class="exchange-btn bg-white text-yuminemu-blue text-xs font-black px-4 py-2 rounded-full shadow-sm hover:bg-gray-100 transition transform active:scale-95" data-type="yuminemu">
+                            交換する
+                        </button>
                     </div>
                 </div>
 
-                <!-- キャンペーンアイテム2 -->
-                <div class="campaign-item bg-gradient-to-r from-mitsu-blue to-blue-400 rounded-2xl p-4 shadow-sm flex items-center gap-4 text-white relative overflow-hidden cursor-pointer hover:opacity-90 transition active:scale-[0.98]"
-                     data-title="安心安全、登録キャンペーン！"
-                     data-desc="Mitsu Payは生体認証や高度な暗号化技術を用いた強固なセキュリティで、あなたの大切な資産を守ります。<br><br>さらに、今なら新規登録を完了された方全員に、すぐ使える1000ptをプレゼント中！">
-                    <div class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center shrink-0 backdrop-blur-sm pointer-events-none">
-                        <i data-lucide="gift" class="w-8 h-8 text-white"></i>
+                <!-- ゆみうまポイント カード -->
+                <div class="bg-gradient-to-br from-yumiuma-orange to-orange-500 rounded-2xl p-4 shadow-md text-white relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 opacity-20">
+                        <i data-lucide="utensils-crossed" class="w-24 h-24 text-yellow-100"></i>
                     </div>
-                    <div class="z-10 pointer-events-none">
-                        <h4 class="font-bold text-white text-sm">安心安全、登録キャンペーン！</h4>
-                        <p class="text-[11px] text-white/90 mt-1 leading-tight">強固なセキュリティ＆今なら新規登録で1000ptプレゼント中！</p>
+                    <div class="relative z-10 flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                                <i data-lucide="utensils" class="w-6 h-6 text-yellow-100"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-sm">ゆみうまポイント</h3>
+                                <p class="text-[10px] text-yumiuma-light opacity-90">おいしい「うまい」をお届け！</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-black leading-none" id="yumiuma-display">850 <span class="text-sm">pt</span></div>
+                        </div>
                     </div>
-                    <span class="absolute -bottom-2 -right-2 text-5xl opacity-20 transform -rotate-12 pointer-events-none">🎁</span>
+                    
+                    <div class="relative z-10 bg-white/20 rounded-xl p-3 flex justify-between items-center backdrop-blur-sm border border-white/20">
+                        <div>
+                            <p class="text-xs font-bold text-yellow-100">5pt <i data-lucide="arrow-right" class="w-3 h-3 inline"></i> 1円分</p>
+                            <p class="text-[10px] text-white/90">みつペイ残高にチャージ</p>
+                        </div>
+                        <button class="exchange-btn bg-white text-yumiuma-orange text-xs font-black px-4 py-2 rounded-full shadow-sm hover:bg-gray-100 transition transform active:scale-95" data-type="yumiuma">
+                            交換する
+                        </button>
+                    </div>
                 </div>
             </div>
         </main>
@@ -277,60 +313,21 @@
             </h2>
             
             <div class="space-y-0" id="history-list">
-                <!-- 既存の履歴アイテムに class="history-item" と data属性 を付与 -->
-                <div class="history-item py-4 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 px-2 -mx-2 rounded-xl transition cursor-pointer active:bg-gray-100"
-                     data-type="payment" data-store="セブン" data-date="2026/08/13 12:30" data-amount="-580" data-point="17" data-icon="store" data-color="green">
-                    <div class="flex items-center gap-4 pointer-events-none">
+                <!-- 初期履歴データ -->
+                <div class="py-4 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 px-2 -mx-2 rounded-xl transition">
+                    <div class="flex items-center gap-4">
                         <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-600 border border-green-100">
                             <i data-lucide="store" class="w-6 h-6"></i>
                         </div>
                         <div>
-                            <p class="font-bold text-mitsu-dark">セブン</p>
+                            <p class="font-bold text-mitsu-dark text-sm">セブン</p>
                             <p class="text-[11px] text-gray-400">2026/08/13 12:30</p>
                         </div>
                     </div>
-                    <div class="text-right pointer-events-none">
-                        <p class="font-black text-mitsu-dark text-lg">-¥580</p>
-                        <div class="text-xs font-bold text-mitsu-orange flex items-center justify-end gap-0.5">
-                            <div class="w-3 h-3 honeycomb bg-mitsu-orange flex items-center justify-center text-white text-[8px]">P</div>+17
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="history-item py-4 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 px-2 -mx-2 rounded-xl transition cursor-pointer active:bg-gray-100"
-                     data-type="payment" data-store="スーパー バナツリ" data-date="2026/08/12 18:45" data-amount="-3240" data-point="97" data-icon="shopping-basket" data-color="orange">
-                    <div class="flex items-center gap-4 pointer-events-none">
-                        <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center text-orange-600 border border-orange-100">
-                            <i data-lucide="shopping-basket" class="w-6 h-6"></i>
-                        </div>
-                        <div>
-                            <p class="font-bold text-mitsu-dark">スーパー バナツリ</p>
-                            <p class="text-[11px] text-gray-400">2026/08/12 18:45</p>
-                        </div>
-                    </div>
-                    <div class="text-right pointer-events-none">
-                        <p class="font-black text-mitsu-dark text-lg">-¥3,240</p>
-                        <div class="text-xs font-bold text-mitsu-orange flex items-center justify-end gap-0.5">
-                            <div class="w-3 h-3 honeycomb bg-mitsu-orange flex items-center justify-center text-white text-[8px]">P</div>+97
-                        </div>
-                    </div>
-                </div>
-
-                <div class="history-item py-4 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 px-2 -mx-2 rounded-xl transition cursor-pointer active:bg-gray-100"
-                     data-type="payment" data-store="Cafe" data-date="2026/08/10 15:00" data-amount="-850" data-point="25" data-icon="coffee" data-color="amber">
-                    <div class="flex items-center gap-4 pointer-events-none">
-                        <div class="w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center text-amber-700 border border-amber-100">
-                            <i data-lucide="coffee" class="w-6 h-6"></i>
-                        </div>
-                        <div>
-                            <p class="font-bold text-mitsu-dark">Cafe</p>
-                            <p class="text-[11px] text-gray-400">2026/08/10 15:00</p>
-                        </div>
-                    </div>
-                    <div class="text-right pointer-events-none">
-                        <p class="font-black text-mitsu-dark text-lg">-¥850</p>
-                        <div class="text-xs font-bold text-mitsu-orange flex items-center justify-end gap-0.5">
-                            <div class="w-3 h-3 honeycomb bg-mitsu-orange flex items-center justify-center text-white text-[8px]">P</div>+25
+                    <div class="text-right">
+                        <p class="font-black text-mitsu-dark">-¥580</p>
+                        <div class="text-[10px] font-bold text-mitsu-orange flex items-center justify-end gap-0.5">
+                            <div class="w-3 h-3 honeycomb bg-mitsu-orange flex items-center justify-center text-white text-[7px]">P</div>+17
                         </div>
                     </div>
                 </div>
@@ -356,21 +353,17 @@
             </button>
         </nav>
 
-
         <!-- ==========================================
-             各種オーバーレイ・モーダル群
+             モーダル群
         =========================================== -->
         
-        
-        <!-- 【決済完了モーダル】 -->
-        <div id="payment-modal" class="absolute inset-0 bg-mitsu-dark/40 backdrop-blur-sm z-50 hidden flex-col justify-end opacity-0 transition-opacity duration-300">
+        <!-- 決済完了モーダル -->
+        <div id="payment-modal" class="absolute inset-0 bg-mitsu-dark/40 backdrop-blur-sm z-50 hidden flex-col justify-end">
             <div class="bg-white w-full rounded-t-[2rem] p-6 pb-safe modal-content flex flex-col items-center text-center shadow-[0_-10px_40px_rgba(0,0,0,0.2)] pointer-events-auto">
                 <div class="w-12 h-1.5 bg-gray-200 rounded-full mb-6"></div>
-                
                 <div class="w-20 h-20 honeycomb bg-gradient-to-br from-mitsu-yellow to-mitsu-orange flex items-center justify-center text-white mb-4 floating-bee shadow-lg">
                     <i data-lucide="check" class="w-10 h-10 stroke-[3]"></i>
                 </div>
-                
                 <h3 class="text-2xl font-black text-mitsu-dark mb-1">お支払い完了！</h3>
                 <p class="text-mitsu-orange font-bold text-sm mb-6">今日も甘〜い一日を！🐝</p>
                 
@@ -378,7 +371,6 @@
                     <div class="absolute right-0 bottom-0 text-6xl opacity-10 translate-x-4 translate-y-4">🍯</div>
                     <p class="text-xs font-bold text-gray-500 mb-1">お支払い金額</p>
                     <p class="text-4xl font-black text-mitsu-dark mb-3">-¥1,200</p>
-                    
                     <div class="flex justify-between items-center border-t border-mitsu-yellow/30 pt-3">
                         <span class="text-sm font-bold text-mitsu-dark">獲得ポイント</span>
                         <div class="flex items-center gap-1 font-black text-mitsu-orange text-lg">
@@ -386,85 +378,44 @@
                         </div>
                     </div>
                 </div>
-                
-                <button class="close-modal-btn w-full bg-gray-100 text-mitsu-dark font-black text-lg py-4 rounded-full hover:bg-gray-200 active:bg-gray-300 transition-colors cursor-pointer" data-target="payment-modal">
-                    閉じる
-                </button>
+                <button id="close-payment-btn" class="w-full bg-gray-100 text-mitsu-dark font-black text-lg py-4 rounded-full hover:bg-gray-200 transition-colors">閉じる</button>
             </div>
         </div>
 
-        <!-- 【チャージモーダル】 -->
-        <div id="charge-modal" class="absolute inset-0 bg-mitsu-dark/40 backdrop-blur-sm z-50 hidden flex-col justify-end opacity-0 transition-opacity duration-300">
-            <div class="bg-white w-full rounded-t-[2rem] p-6 pb-safe modal-content flex flex-col items-center shadow-[0_-10px_40px_rgba(0,0,0,0.2)] pointer-events-auto">
-                <div class="w-12 h-1.5 bg-gray-200 rounded-full mb-6"></div>
-                <h3 class="text-xl font-black text-mitsu-dark mb-4">チャージする</h3>
+        <!-- ポイント交換確認モーダル -->
+        <div id="exchange-modal" class="absolute inset-0 bg-mitsu-dark/60 backdrop-blur-sm z-50 hidden flex-col justify-center items-center p-5">
+            <div class="bg-white w-full rounded-[2rem] p-6 shadow-2xl modal-content transform scale-95 transition-transform" id="exchange-modal-inner">
                 
-                <div class="w-full flex gap-3 mb-6">
-                    <button class="charge-amount-btn flex-1 bg-white border-2 border-gray-200 rounded-xl py-3 font-bold text-mitsu-dark hover:border-mitsu-orange hover:bg-mitsu-light/30 transition-colors" data-amount="1000">¥1,000</button>
-                    <button class="charge-amount-btn flex-1 bg-white border-2 border-gray-200 rounded-xl py-3 font-bold text-mitsu-dark hover:border-mitsu-orange hover:bg-mitsu-light/30 transition-colors" data-amount="3000">¥3,000</button>
-                    <button class="charge-amount-btn flex-1 bg-white border-2 border-gray-200 rounded-xl py-3 font-bold text-mitsu-dark hover:border-mitsu-orange hover:bg-mitsu-light/30 transition-colors" data-amount="5000">¥5,000</button>
+                <div class="text-center mb-5">
+                    <div id="ex-icon-wrapper" class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center shadow-md">
+                        <i id="ex-icon" data-lucide="refresh-cw" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-mitsu-dark" id="ex-title">ポイントをみつペイに交換</h3>
+                    <p class="text-xs text-gray-500 mt-1 font-bold">5ポイント = 1円分としてチャージされます</p>
                 </div>
                 
-                <div class="w-full mb-6 bg-gray-50 rounded-xl p-4 flex justify-between items-center border border-gray-100">
-                    <span class="text-sm font-bold text-gray-500">チャージ金額</span>
-                    <div class="text-2xl font-black text-mitsu-dark">¥<span id="selected-charge-amount">0</span></div>
+                <div class="bg-gray-50 rounded-2xl p-4 border border-gray-200 mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm font-bold text-gray-600">交換するポイント</span>
+                        <span class="text-lg font-black text-mitsu-dark"><span id="ex-points-use">0</span> pt</span>
+                    </div>
+                    <div class="flex justify-center my-2 text-gray-300">
+                        <i data-lucide="arrow-down" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
+                        <span class="text-sm font-bold text-gray-600">みつペイ残高チャージ額</span>
+                        <span class="text-2xl font-black text-mitsu-orange">+¥<span id="ex-yen-get">0</span></span>
+                    </div>
                 </div>
                 
-                <button id="execute-charge-btn" class="w-full bg-mitsu-blue text-white font-black text-lg py-4 rounded-full shadow-[0_4px_15px_rgba(56,189,248,0.4)] transform transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer mb-3 disabled:opacity-50 disabled:pointer-events-none disabled:shadow-none" disabled>
-                    <i data-lucide="plus-circle" class="w-5 h-5"></i>
-                    残高に追加する
-                </button>
-                <button class="close-modal-btn text-sm font-bold text-gray-400 py-2 cursor-pointer" data-target="charge-modal">キャンセル</button>
-            </div>
-        </div>
-
-        <!-- 【通知モーダル】 -->
-        <div id="notification-modal" class="absolute inset-0 bg-mitsu-dark/40 backdrop-blur-sm z-50 hidden flex-col justify-end opacity-0 transition-opacity duration-300">
-            <div class="bg-white w-full h-[70vh] rounded-t-[2rem] p-6 pb-safe modal-content flex flex-col shadow-[0_-10px_40px_rgba(0,0,0,0.2)] pointer-events-auto">
-                <div class="w-12 h-1.5 bg-gray-200 rounded-full mb-6 mx-auto shrink-0"></div>
-                <div class="flex justify-between items-center mb-4 shrink-0">
-                    <h3 class="text-xl font-black text-mitsu-dark flex items-center gap-2">
-                        <i data-lucide="bell" class="text-mitsu-orange"></i> お知らせ
-                    </h3>
-                    <button class="close-modal-btn bg-gray-100 p-2 rounded-full cursor-pointer" data-target="notification-modal">
-                        <i data-lucide="x" class="w-5 h-5 text-gray-500"></i>
+                <div class="flex gap-3">
+                    <button id="cancel-exchange-btn" class="flex-1 bg-gray-100 text-gray-600 font-bold py-4 rounded-full hover:bg-gray-200 transition">
+                        やめる
+                    </button>
+                    <button id="confirm-exchange-btn" class="flex-1 text-white font-black py-4 rounded-full shadow-md hover:opacity-90 transition flex justify-center items-center gap-2">
+                        交換する
                     </button>
                 </div>
-                
-                <div class="flex-1 overflow-y-auto no-scrollbar space-y-3">
-                    <div class="bg-mitsu-light/50 p-4 rounded-2xl border border-mitsu-yellow/30">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="bg-mitsu-orange text-white text-[10px] font-bold px-2 py-0.5 rounded-full">重要</span>
-                            <span class="text-xs text-gray-500">2026/08/14</span>
-                        </div>
-                        <h4 class="font-bold text-mitsu-dark text-sm mb-1">新規登録キャンペーン1000pt付与完了</h4>
-                        <p class="text-xs text-gray-600">みつペイへようこそ！ご登録特典の1000ptを付与いたしました。早速お買い物にお使いください。</p>
-                    </div>
-                    <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="bg-gray-300 text-gray-700 text-[10px] font-bold px-2 py-0.5 rounded-full">お知らせ</span>
-                            <span class="text-xs text-gray-500">2026/08/10</span>
-                        </div>
-                        <h4 class="font-bold text-mitsu-dark text-sm mb-1">セキュリティ強化のお願い</h4>
-                        <p class="text-xs text-gray-600">安全にご利用いただくため、定期的なパスワード変更や生体認証の登録を推奨しております。</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 【汎用詳細モーダル（履歴＆キャンペーン用）】 -->
-        <div id="detail-modal" class="absolute inset-0 bg-mitsu-dark/40 backdrop-blur-sm z-50 hidden flex-col justify-end opacity-0 transition-opacity duration-300">
-            <div class="bg-white w-full rounded-t-[2rem] p-6 pb-safe modal-content flex flex-col items-center text-center shadow-[0_-10px_40px_rgba(0,0,0,0.2)] pointer-events-auto">
-                <div class="w-12 h-1.5 bg-gray-200 rounded-full mb-6"></div>
-                
-                <!-- 動的に書き換えるエリア -->
-                <div id="detail-modal-content" class="w-full text-left mb-6">
-                    <!-- 内容はJSで生成 -->
-                </div>
-                
-                <button class="close-modal-btn w-full bg-gray-100 text-mitsu-dark font-black text-lg py-4 rounded-full hover:bg-gray-200 active:bg-gray-300 transition-colors cursor-pointer" data-target="detail-modal">
-                    閉じる
-                </button>
             </div>
         </div>
 
@@ -472,25 +423,69 @@
 
     <!-- インタラクション用 JavaScript -->
     <script>
-        
-        // 状態管理
-        let currentBalance = 20000;
-        let currentPoints = 1000;
-        let selectedChargeAmount = 0;
+        // アプリの状態（グローバル変数）
+        let state = {
+            balance: 20000,
+            mitsuPoints: 1000,
+            yuminemuPoints: 1500, // ゆみねむポイント初期値
+            yumiumaPoints: 850,   // ゆみうまポイント初期値
+            currentExchangeType: null // 'yuminemu' or 'yumiuma'
+        };
 
-        // 初期化関数
-        function initApp() {
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-            
-            setupTabs();
-            setupModals();
-            setupPayment();
-            setupCharge();
-            setupListInteractions();
+        // レート設定
+        const EXCHANGE_RATE = 5; // 5pt = 1円
+
+        function updateDisplay() {
+            document.getElementById('balance').textContent = state.balance.toLocaleString();
+            document.getElementById('points-home').textContent = state.mitsuPoints.toLocaleString();
+            document.getElementById('points-tab-display').textContent = state.mitsuPoints.toLocaleString();
+            document.getElementById('yuminemu-display').innerHTML = `${state.yuminemuPoints.toLocaleString()} <span class="text-sm">pt</span>`;
+            document.getElementById('yumiuma-display').innerHTML = `${state.yumiumaPoints.toLocaleString()} <span class="text-sm">pt</span>`;
         }
 
-        // タブ切り替えの設定
-        function setupTabs() {
+        function addHistoryItem(title, amount, type, timeStr, icon, colorClass, isPointExchange = false) {
+            const historyList = document.getElementById('history-list');
+            if (!historyList) return;
+            
+            let amountStr = amount < 0 ? `-¥${Math.abs(amount).toLocaleString()}` : `+¥${amount.toLocaleString()}`;
+            let amountColor = amount < 0 ? 'text-mitsu-dark' : 'text-mitsu-orange';
+            let bgLight = isPointExchange ? 'bg-orange-50/50' : 'bg-mitsu-light/30';
+            
+            const html = `
+                <div class="py-4 border-b border-gray-100 flex justify-between items-center ${bgLight} px-4 -mx-4 rounded-xl transition-all duration-500 mb-2 shadow-sm border ${isPointExchange ? 'border-orange-100' : 'border-mitsu-yellow/20'}">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 ${colorClass} rounded-full flex items-center justify-center border shadow-sm">
+                            <i data-lucide="${icon}" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-mitsu-dark text-sm">${title}</p>
+                            <p class="text-[11px] text-gray-500">${timeStr}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-black ${amountColor} text-lg">${amountStr}</p>
+                        ${isPointExchange ? 
+                          `<p class="text-[10px] font-bold text-gray-500 mt-1">ポイント交換</p>` : 
+                          `<div class="text-[10px] font-bold text-mitsu-orange flex items-center justify-end gap-0.5 mt-1">
+                               <div class="w-3 h-3 honeycomb bg-mitsu-orange flex items-center justify-center text-white text-[7px]">P</div>+${Math.floor(Math.abs(amount)*0.03)}
+                           </div>`
+                        }
+                    </div>
+                </div>
+            `;
+            historyList.insertAdjacentHTML('afterbegin', html);
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function getCurrentTime() {
+            const now = new Date();
+            return `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+        }
+
+        function initApp() {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            // 1. タブ切り替えロジック
             const navBtns = document.querySelectorAll('.nav-btn');
             const tabContents = document.querySelectorAll('.tab-content');
             
@@ -499,315 +494,169 @@
                     navBtns.forEach(b => {
                         b.classList.remove('text-mitsu-orange');
                         b.classList.add('text-gray-400');
-                        const indicator = b.querySelector('.indicator');
-                        if (indicator) indicator.classList.add('opacity-0');
+                        b.querySelector('.indicator').classList.add('opacity-0');
                         
-                        // Lucideによって<i>が<svg>に変換されるため両方対応
-                        const icon = b.querySelector('svg') || b.querySelector('i');
-                        if (icon) icon.classList.remove('-translate-y-1');
+                        // Icon animation reset (find SVG inside btn)
+                        const icon = b.querySelector('svg');
+                        if(icon) icon.classList.remove('-translate-y-1');
                     });
                     
                     btn.classList.remove('text-gray-400');
                     btn.classList.add('text-mitsu-orange');
-                    const indicator = btn.querySelector('.indicator');
-                    if (indicator) indicator.classList.remove('opacity-0');
+                    btn.querySelector('.indicator').classList.remove('opacity-0');
                     
-                    const icon = btn.querySelector('svg') || btn.querySelector('i');
-                    if (icon) icon.classList.add('-translate-y-1');
+                    const activeIcon = btn.querySelector('svg');
+                    if(activeIcon) activeIcon.classList.add('-translate-y-1');
 
                     const targetId = btn.getAttribute('data-target');
                     tabContents.forEach(content => content.classList.remove('active'));
-                    const targetEl = document.getElementById(targetId);
-                    if (targetEl) targetEl.classList.add('active');
+                    document.getElementById(targetId).classList.add('active');
                 });
             });
 
-            // ホーム画面のミニポイントカードをクリックでポイントタブへ
-            const miniPointsCard = document.getElementById('mini-points-card');
-            if (miniPointsCard) {
-                miniPointsCard.addEventListener('click', () => {
-                    document.querySelector('.nav-btn[data-target="tab-points"]').click();
-                });
-            }
-        }
-
-        // モーダルの開閉共通ロジック
-        function openModal(id) {
-            const modal = document.getElementById(id);
-            if(modal) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                // 少し遅延させてopacityを1に（Tailwindのtransition用）
-                setTimeout(() => modal.classList.remove('opacity-0'), 10);
-            }
-        }
-        function closeModal(id) {
-            const modal = document.getElementById(id);
-            if(modal) {
-                modal.classList.add('opacity-0');
-                // アニメーション完了後にhiddenにする
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                    modal.classList.remove('flex');
-                }, 300);
-            }
-        }
-
-        function setupModals() {
-            // 閉じるボタンの設定
-            document.querySelectorAll('.close-modal-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const target = e.currentTarget.getAttribute('data-target');
-                    closeModal(target);
-                });
+            // ホームのミニポイントカードからポイントタブへ遷移
+            document.getElementById('mini-points-card')?.addEventListener('click', () => {
+                document.querySelector('.nav-btn[data-target="tab-points"]')?.click();
             });
 
-            // 通知ボタン
-            const notifBtn = document.getElementById('notification-btn');
-            const notifBadge = document.getElementById('notification-badge');
-            notifBtn.addEventListener('click', () => {
-                openModal('notification-modal');
-                // バッジを消す
-                if(notifBadge) notifBadge.style.display = 'none';
-            });
-        }
-
-        // 日付フォーマット用ヘルパー
-        function getFormattedDate() {
-            const now = new Date();
-            return `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-        }
-
-        // 決済シミュレーション
-        function setupPayment() {
+            // 2. 決済デモ処理
             const payBtn = document.getElementById('pay-btn');
+            const paymentModal = document.getElementById('payment-modal');
             
             if (payBtn) {
                 payBtn.addEventListener('click', () => {
                     const originalContent = payBtn.innerHTML;
                     payBtn.innerHTML = '<i data-lucide="loader-2" class="w-6 h-6 animate-spin"></i> 通信中...';
                     payBtn.classList.add('opacity-80', 'pointer-events-none');
-                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                    lucide.createIcons();
                     
                     setTimeout(() => {
                         payBtn.innerHTML = originalContent;
                         payBtn.classList.remove('opacity-80', 'pointer-events-none');
-                        if (typeof lucide !== 'undefined') lucide.createIcons();
+                        lucide.createIcons();
 
                         const payAmount = 1200;
-                        const getPoint = 36;
+                        const getPoint = Math.floor(payAmount * 0.03); // 3%
                         
-                        // 残高不足チェック（簡易）
-                        if(currentBalance < payAmount) {
-                            alert("残高が不足しています。チャージしてください。");
-                            return;
-                        }
-
-                        currentBalance -= payAmount;
-                        currentPoints += getPoint;
+                        state.balance -= payAmount;
+                        state.mitsuPoints += getPoint;
+                        updateDisplay();
+                        addHistoryItem('スーパー バナツリ', -payAmount, 'payment', getCurrentTime(), 'shopping-cart', 'bg-blue-50 text-mitsu-blue border-blue-100');
                         
-                        updateBalanceUI();
-                        
-                        // 履歴に追加
-                        addHistoryItem("payment", "スーパー バナツリ", -payAmount, getPoint, "shopping-cart", "blue");
-                        
-                        openModal('payment-modal');
-
+                        paymentModal.classList.remove('hidden');
+                        paymentModal.classList.add('flex');
                     }, 800);
                 });
             }
-        }
 
-        // チャージ機能
-        function setupCharge() {
-            const chargeBtn = document.getElementById('charge-btn');
-            const chargeAmountBtns = document.querySelectorAll('.charge-amount-btn');
-            const selectedChargeEl = document.getElementById('selected-charge-amount');
-            const executeChargeBtn = document.getElementById('execute-charge-btn');
+            document.getElementById('close-payment-btn')?.addEventListener('click', () => {
+                paymentModal.classList.add('hidden');
+                paymentModal.classList.remove('flex');
+            });
 
-            if(chargeBtn) {
-                chargeBtn.addEventListener('click', () => {
-                    // 選択状態をリセット
-                    selectedChargeAmount = 0;
-                    selectedChargeEl.textContent = "0";
-                    executeChargeBtn.disabled = true;
-                    chargeAmountBtns.forEach(b => {
-                        b.classList.remove('border-mitsu-orange', 'bg-mitsu-light/30');
-                        b.classList.add('border-gray-200');
-                    });
-                    openModal('charge-modal');
-                });
-            }
 
-            chargeAmountBtns.forEach(btn => {
+            // 3. ポイント交換処理
+            const exchangeBtns = document.querySelectorAll('.exchange-btn');
+            const exchangeModal = document.getElementById('exchange-modal');
+            const exTitle = document.getElementById('ex-title');
+            const exIconWrapper = document.getElementById('ex-icon-wrapper');
+            const exIcon = document.getElementById('ex-icon');
+            const exPointsUse = document.getElementById('ex-points-use');
+            const exYenGet = document.getElementById('ex-yen-get');
+            const confirmExBtn = document.getElementById('confirm-exchange-btn');
+            
+            let exchangeData = { points: 0, yen: 0, type: '' };
+
+            exchangeBtns.forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    // 他の選択を解除
-                    chargeAmountBtns.forEach(b => {
-                        b.classList.remove('border-mitsu-orange', 'bg-mitsu-light/30');
-                        b.classList.add('border-gray-200');
-                    });
-                    // 選択状態にする
-                    const target = e.currentTarget;
-                    target.classList.remove('border-gray-200');
-                    target.classList.add('border-mitsu-orange', 'bg-mitsu-light/30');
+                    const type = e.currentTarget.getAttribute('data-type');
+                    state.currentExchangeType = type;
                     
-                    selectedChargeAmount = parseInt(target.getAttribute('data-amount'));
-                    selectedChargeEl.textContent = selectedChargeAmount.toLocaleString();
-                    executeChargeBtn.disabled = false;
+                    // 利用可能ポイントを全て計算（今回は全額交換仕様とする）
+                    let availablePoints = type === 'yuminemu' ? state.yuminemuPoints : state.yumiumaPoints;
+                    
+                    // 5の倍数に丸める（端数は交換できない）
+                    const usePoints = Math.floor(availablePoints / EXCHANGE_RATE) * EXCHANGE_RATE;
+                    const getYen = usePoints / EXCHANGE_RATE;
+                    
+                    if (usePoints === 0) {
+                        alert("交換可能なポイントがありません（5ptから交換可能です）");
+                        return;
+                    }
+
+                    exchangeData = { points: usePoints, yen: getYen, type: type };
+
+                    // モーダルの見た目変更
+                    if (type === 'yuminemu') {
+                        exTitle.textContent = "ゆみねむポイントを交換";
+                        exIconWrapper.className = "w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center shadow-md bg-yuminemu-blue";
+                        exIconWrapper.innerHTML = '<i data-lucide="moon" class="w-8 h-8 text-yellow-300 fill-yellow-300"></i>';
+                        confirmExBtn.className = "flex-1 text-white font-black py-4 rounded-full shadow-md hover:opacity-90 transition flex justify-center items-center gap-2 bg-yuminemu-blue";
+                    } else {
+                        exTitle.textContent = "ゆみうまポイントを交換";
+                        exIconWrapper.className = "w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center shadow-md bg-yumiuma-orange";
+                        exIconWrapper.innerHTML = '<i data-lucide="utensils" class="w-8 h-8 text-yellow-100"></i>';
+                        confirmExBtn.className = "flex-1 text-white font-black py-4 rounded-full shadow-md hover:opacity-90 transition flex justify-center items-center gap-2 bg-yumiuma-orange";
+                    }
+                    
+                    exPointsUse.textContent = usePoints.toLocaleString();
+                    exYenGet.textContent = getYen.toLocaleString();
+                    
+                    lucide.createIcons();
+                    exchangeModal.classList.remove('hidden');
+                    exchangeModal.classList.add('flex');
+                    setTimeout(() => {
+                        document.getElementById('exchange-modal-inner').classList.remove('scale-95');
+                        document.getElementById('exchange-modal-inner').classList.add('scale-100');
+                    }, 10);
                 });
             });
 
-            if(executeChargeBtn) {
-                executeChargeBtn.addEventListener('click', () => {
-                    if(selectedChargeAmount > 0) {
-                        const originalContent = executeChargeBtn.innerHTML;
-                        executeChargeBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> 処理中...';
-                        
-                        setTimeout(() => {
-                            currentBalance += selectedChargeAmount;
-                            updateBalanceUI();
-                            addHistoryItem("charge", "銀行口座からチャージ", selectedChargeAmount, 0, "landmark", "gray");
-                            
-                            executeChargeBtn.innerHTML = originalContent;
-                            closeModal('charge-modal');
-                        }, 600);
-                    }
-                });
-            }
-        }
+            // 交換実行ボタン
+            confirmExBtn.addEventListener('click', () => {
+                const originalHtml = confirmExBtn.innerHTML;
+                confirmExBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> 交換中...';
+                confirmExBtn.disabled = true;
+                lucide.createIcons();
 
-        // 履歴やキャンペーンのクリック詳細表示ロジック
-        function setupListInteractions() {
-            // キャンペーンアイテムのクリック（静的要素）
-            document.querySelectorAll('.campaign-item').forEach(item => {
-                item.addEventListener('click', (e) => {
-                    const target = e.currentTarget;
-                    const title = target.getAttribute('data-title');
-                    const desc = target.getAttribute('data-desc');
-                    showDetailModal("campaign", { title, desc });
-                });
+                setTimeout(() => {
+                    // 残高・ポイント更新
+                    state.balance += exchangeData.yen;
+                    if (exchangeData.type === 'yuminemu') {
+                        state.yuminemuPoints -= exchangeData.points;
+                        addHistoryItem('ゆみねむポイントからチャージ', exchangeData.yen, 'charge', getCurrentTime(), 'moon', 'bg-blue-50 text-yuminemu-blue border-blue-200', true);
+                    } else {
+                        state.yumiumaPoints -= exchangeData.points;
+                        addHistoryItem('ゆみうまポイントからチャージ', exchangeData.yen, 'charge', getCurrentTime(), 'utensils', 'bg-orange-50 text-yumiuma-orange border-orange-200', true);
+                    }
+                    
+                    updateDisplay();
+                    
+                    // 閉じる
+                    confirmExBtn.innerHTML = originalHtml;
+                    confirmExBtn.disabled = false;
+                    exchangeModal.classList.add('hidden');
+                    exchangeModal.classList.remove('flex');
+                    document.getElementById('exchange-modal-inner').classList.add('scale-95');
+                    document.getElementById('exchange-modal-inner').classList.remove('scale-100');
+                    
+                    // 履歴タブへ移動して見せる
+                    document.querySelector('.nav-btn[data-target="tab-history"]')?.click();
+
+                }, 800);
             });
 
-            // 履歴リストのクリック（動的追加要素対応のためイベント委譲）
-            const historyList = document.getElementById('history-list');
-            if(historyList) {
-                historyList.addEventListener('click', (e) => {
-                    const item = e.target.closest('.history-item');
-                    if(item) {
-                        const type = item.getAttribute('data-type');
-                        const store = item.getAttribute('data-store');
-                        const date = item.getAttribute('data-date');
-                        const amount = item.getAttribute('data-amount');
-                        const point = item.getAttribute('data-point');
-                        showDetailModal("history", { type, store, date, amount, point });
-                    }
-                });
-            }
+            // キャンセルボタン
+            document.getElementById('cancel-exchange-btn')?.addEventListener('click', () => {
+                exchangeModal.classList.add('hidden');
+                exchangeModal.classList.remove('flex');
+                document.getElementById('exchange-modal-inner').classList.add('scale-95');
+                document.getElementById('exchange-modal-inner').classList.remove('scale-100');
+            });
+
         }
 
-        // 汎用詳細モーダルの中身を書き換えて表示
-        function showDetailModal(type, data) {
-            const contentEl = document.getElementById('detail-modal-content');
-            let html = "";
-            
-            if(type === "history") {
-                const isCharge = data.type === "charge";
-                const amountNum = parseInt(data.amount);
-                const amountStr = isCharge ? `+¥${amountNum.toLocaleString()}` : `-¥${Math.abs(amountNum).toLocaleString()}`;
-                const amountColorClass = isCharge ? "text-blue-600" : "text-mitsu-dark";
-                
-                html = `
-                    <div class="text-center mb-6">
-                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                            <i data-lucide="${isCharge ? 'landmark' : 'receipt'}" class="w-8 h-8 text-gray-600"></i>
-                        </div>
-                        <h4 class="font-bold text-gray-500 text-sm">${isCharge ? 'チャージ' : 'お支払い先'}</h4>
-                        <h3 class="text-2xl font-black text-mitsu-dark mb-1">${data.store}</h3>
-                        <p class="text-xs text-gray-400">${data.date}</p>
-                    </div>
-                    
-                    <div class="border-t border-b border-gray-100 py-4 mb-4">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-bold text-gray-600">金額</span>
-                            <span class="text-2xl font-black ${amountColorClass}">${amountStr}</span>
-                        </div>
-                        ${!isCharge ? `
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm font-bold text-gray-600">獲得ポイント</span>
-                            <div class="flex items-center gap-1 font-bold text-mitsu-orange">
-                                <div class="w-4 h-4 honeycomb bg-mitsu-orange flex items-center justify-center text-white text-[10px]">P</div>
-                                +${data.point} pt
-                            </div>
-                        </div>
-                        ` : ''}
-                    </div>
-                    <p class="text-[10px] text-gray-400 text-center">お取引番号: ${Math.floor(Math.random()*10000000000).toString().padStart(10, '0')}</p>
-                `;
-            } else if (type === "campaign") {
-                html = `
-                    <div class="bg-mitsu-light/50 -mx-6 -mt-6 p-6 pb-8 mb-4 border-b border-mitsu-yellow/30 relative overflow-hidden text-center">
-                        <div class="absolute right-0 bottom-0 text-7xl opacity-10 translate-x-4 translate-y-4">🐝</div>
-                        <i data-lucide="sparkles" class="w-10 h-10 text-mitsu-orange mx-auto mb-3"></i>
-                        <h3 class="text-xl font-black text-mitsu-dark leading-snug">${data.title}</h3>
-                    </div>
-                    <div class="px-2">
-                        <h4 class="font-bold text-gray-500 text-sm mb-2">キャンペーン詳細</h4>
-                        <p class="text-sm text-mitsu-dark leading-relaxed">${data.desc}</p>
-                    </div>
-                `;
-            }
-            
-            contentEl.innerHTML = html;
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-            openModal('detail-modal');
-        }
-
-        // 残高UIの更新
-        function updateBalanceUI() {
-            document.getElementById('balance').textContent = currentBalance.toLocaleString();
-            document.getElementById('points-home').textContent = currentPoints.toLocaleString();
-            document.getElementById('points-tab-display').textContent = currentPoints.toLocaleString();
-        }
-
-        // 履歴アイテムの動的追加
-        function addHistoryItem(type, store, amount, point, icon, color) {
-            const historyList = document.getElementById('history-list');
-            if(!historyList) return;
-            
-            const dateStr = getFormattedDate();
-            const amountStr = type === "charge" ? `+¥${amount.toLocaleString()}` : `-¥${Math.abs(amount).toLocaleString()}`;
-            const amountClass = type === "charge" ? "text-blue-600" : "text-mitsu-dark";
-            
-            const pointHtml = type === "charge" ? '' : `
-                <div class="text-xs font-bold text-mitsu-orange flex items-center justify-end gap-0.5 mt-1">
-                    <div class="w-3 h-3 honeycomb bg-mitsu-orange flex items-center justify-center text-white text-[8px]">P</div>+${point}
-                </div>`;
-
-            // 追加時にアニメーションさせるためのクラス設定
-            const newItemHTML = `
-                <div class="history-item py-4 border-b border-gray-100 flex justify-between items-center bg-mitsu-light/30 px-4 -mx-4 rounded-xl mb-2 shadow-sm border border-mitsu-yellow/20 cursor-pointer active:bg-gray-100"
-                     data-type="${type}" data-store="${store}" data-date="${dateStr}" data-amount="${amount}" data-point="${point}">
-                    <div class="flex items-center gap-4 pointer-events-none">
-                        <div class="w-12 h-12 bg-${color}-50 rounded-full flex items-center justify-center text-${color}-600 border border-${color}-100 shadow-sm">
-                            <i data-lucide="${icon}" class="w-6 h-6"></i>
-                        </div>
-                        <div>
-                            <p class="font-bold text-mitsu-dark">${store}</p>
-                            <p class="text-[11px] text-gray-500">${dateStr}</p>
-                        </div>
-                    </div>
-                    <div class="text-right pointer-events-none">
-                        <p class="font-black ${amountClass} text-lg">${amountStr}</p>
-                        ${pointHtml}
-                    </div>
-                </div>
-            `;
-            
-            historyList.insertAdjacentHTML('afterbegin', newItemHTML);
-            if (typeof lucide !== 'undefined') lucide.createIcons();
-        }
-
-        // 実行開始
+        // 初期化実行
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initApp);
         } else {
